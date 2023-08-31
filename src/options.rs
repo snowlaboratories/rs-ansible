@@ -112,10 +112,7 @@ impl AnsibleConnectionOptions {
     /// String return a list of connection options flags to be used on
     /// ansible-playbook execution
     pub fn to_string(&self) -> String {
-        let mut options = self
-            .gen_conn_opts()
-            .expect("generate options")
-            .join(" ");
+        let mut options = self.gen_conn_opts().expect("generate options").join(" ");
         options.insert(0, ' ');
 
         return options;

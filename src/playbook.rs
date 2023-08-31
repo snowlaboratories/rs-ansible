@@ -1,7 +1,7 @@
 use serde_json::json;
 use std::error::Error;
 
-use crate::options::{AnsibleConnectionOptions};
+use crate::options::AnsibleConnectionOptions;
 
 /// Parameters described on `Options` section within
 /// ansible-playbook's man page, and which defines which should be

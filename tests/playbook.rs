@@ -7,38 +7,22 @@ mod tests {
 
     #[test]
     fn generate_connection_options() {
-        struct ConnectionOptsTest<'a> {
-            options: AnsibleConnectionOptions,
-            expected: Vec<&'a str>,
-            desc: &'a str,
-        }
+        let options = AnsibleConnectionOptions {
+            connection: "local",
+            ..Default::default()
+        };
+        let expected = vec!["--connection", "local"];
 
-        let tests = vec![ConnectionOptsTest {
-            desc: "Generate connection options",
-            options: AnsibleConnectionOptions {
-                connection: String::from("local"),
-                ..Default::default()
-            },
-            expected: vec!["--connection", "local"],
-        }];
-
-        for test in tests {
-            let ConnectionOptsTest {
-                desc,
-                options,
-                expected,
-            } = test;
-            match options.gen_conn_opts() {
-                Ok(res) => assert_eq!(res, expected),
-                _ => panic!("{}", desc),
-            }
+        match options.gen_conn_opts() {
+            Ok(res) => assert_eq!(res, expected),
+            _ => panic!("Generate connection options"),
         }
     }
 
     #[test]
     fn generate_playbook_options() {
         struct PlaybookOptsTest<'a> {
-            options: AnsiblePlaybookOptions,
+            options: AnsiblePlaybookOptions<'a>,
             expected: Vec<&'a str>,
             desc: &'a str,
         }
@@ -58,10 +42,10 @@ mod tests {
                     force_handlers: true,
                     list_tags: true,
                     list_tasks: true,
-                    skip_tags: String::from("tagN"),
-                    start_at_task: String::from("second"),
+                    skip_tags: "tagN",
+                    start_at_task: "second",
                     step: true,
-                    tags: String::from("tags"),
+                    tags: "tags",
                     ..Default::default()
                 },
                 expected: vec![
@@ -84,14 +68,14 @@ mod tests {
                     extra_vars: json!({
                         "extra": "var",
                     }),
-                    extra_vars_file: vec![String::from("@test.yml")],
+                    extra_vars_file: vec!["@test.yml"],
                     flush_cache: true,
-                    inventory: String::from("inventory"),
-                    limit: String::from("limit"),
+                    inventory: "inventory",
+                    limit: "limit",
                     list_hosts: true,
                     list_tags: true,
                     list_tasks: true,
-                    tags: String::from("tags"),
+                    tags: "tags",
                     ..Default::default()
                 },
                 expected: vec![
@@ -123,6 +107,100 @@ mod tests {
                 Ok(res) => assert_eq!(res, expected),
                 _ => panic!("{}", desc),
             }
+        }
+    }
+
+    #[test]
+    fn generate_command() {
+        let playbook_cmd = AnsiblePlaybookCmd {
+            playbooks: vec!["test/ansible/site.yml"],
+            connection_options: AnsibleConnectionOptions {
+                ask_pass: true,
+                connection: "local",
+                private_key: "pk",
+                timeout: 10,
+                user: "apenella",
+                ..Default::default()
+            },
+            options: AnsiblePlaybookOptions {
+                ask_vault_password: true,
+                check: true,
+                diff: true,
+                forks: "10",
+                list_hosts: true,
+                module_path: "/dev/null",
+                syntax_check: true,
+                vault_id: "asdf",
+                vault_password_file: "/dev/null",
+                verbose: true,
+                version: true,
+
+                inventory: "test/ansible/inventory/all",
+                limit: "myhost",
+                extra_vars: json!({
+                    "var1": "value1",
+                }),
+                flush_cache: true,
+                tags: "tag1",
+                ..Default::default()
+            },
+            privilege_escalation_options: AnsiblePrivilegeEscalationOptions {
+                do_become: true,
+                become_method: "sudo",
+                become_user: "apenella",
+                ask_become_pass: true,
+                ..Default::default()
+            },
+            ..Default::default()
+        };
+
+        let expected = vec![
+            "ansible-playbook",
+            "--ask-vault-password",
+            "--check",
+            "--diff",
+            "--extra-vars",
+            "{\"var1\":\"value1\"}",
+            "--flush-cache",
+            "--forks",
+            "10",
+            "--inventory",
+            "test/ansible/inventory/all",
+            "--limit",
+            "myhost",
+            "--list-hosts",
+            "--module-path",
+            "/dev/null",
+            "--syntax-check",
+            "--tags",
+            "tag1",
+            "--vault-id",
+            "asdf",
+            "--vault-password-file",
+            "/dev/null",
+            "-vvvv",
+            "--version",
+            "--ask-pass",
+            "--connection",
+            "local",
+            "--private-key",
+            "pk",
+            "--timeout",
+            "10",
+            "--user",
+            "apenella",
+            "--ask-become-pass",
+            "--become",
+            "--become-method",
+            "sudo",
+            "--become-user",
+            "apenella",
+            "test/ansible/site.yml",
+        ];
+
+        match playbook_cmd.command() {
+            Ok(res) => assert_eq!(res, expected),
+            _ => panic!("generate AnsiblePlaybookCmd command"),
         }
     }
 }

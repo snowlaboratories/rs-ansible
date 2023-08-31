@@ -18,35 +18,35 @@ pub fn ansible_set_env(key: &str, value: &str) {
 
 /// Has those parameters described on `Connections Options` section within
 /// ansible-playbook's man page, and which defines how to connect to hosts.
-pub struct AnsibleConnectionOptions {
+pub struct AnsibleConnectionOptions<'a> {
     pub ask_pass: bool,
-    pub connection: String,
-    pub private_key: String,
-    pub scp_extra_args: String,
-    pub sftp_extra_args: String,
-    pub ssh_common_args: String,
-    pub ssh_extra_args: String,
+    pub connection: &'a str,
+    pub private_key: &'a str,
+    pub scp_extra_args: &'a str,
+    pub sftp_extra_args: &'a str,
+    pub ssh_common_args: &'a str,
+    pub ssh_extra_args: &'a str,
     pub timeout: i32,
-    pub user: String,
+    pub user: &'a str,
 }
 
-impl Default for AnsibleConnectionOptions {
+impl Default for AnsibleConnectionOptions<'_> {
     fn default() -> Self {
         AnsibleConnectionOptions {
             ask_pass: false,
-            connection: String::new(),
-            private_key: String::new(),
-            scp_extra_args: String::new(),
-            sftp_extra_args: String::new(),
-            ssh_common_args: String::new(),
-            ssh_extra_args: String::new(),
+            connection: "",
+            private_key: "",
+            scp_extra_args: "",
+            sftp_extra_args: "",
+            ssh_common_args: "",
+            ssh_extra_args: "",
             timeout: -1,
-            user: String::new(),
+            user: "",
         }
     }
 }
 
-impl AnsibleConnectionOptions {
+impl AnsibleConnectionOptions<'_> {
     const ASK_PASS_FLAG: &str = "--ask-pass";
     const CONNECTION_FLAG: &str = "--connection";
     const PRIVATE_KEY_FLAG: &str = "--private-key";
@@ -68,32 +68,32 @@ impl AnsibleConnectionOptions {
 
         if !self.connection.is_empty() {
             cmd.push(Self::CONNECTION_FLAG.to_string());
-            cmd.push(self.connection.clone());
+            cmd.push(self.connection.to_string().clone());
         }
 
         if !self.private_key.is_empty() {
             cmd.push(Self::PRIVATE_KEY_FLAG.to_string());
-            cmd.push(self.private_key.clone());
+            cmd.push(self.private_key.to_string().clone());
         }
 
         if !self.scp_extra_args.is_empty() {
             cmd.push(Self::SCP_EXTRA_ARGS_FLAG.to_string());
-            cmd.push(self.scp_extra_args.clone());
+            cmd.push(self.scp_extra_args.to_string().clone());
         }
 
         if !self.sftp_extra_args.is_empty() {
             cmd.push(Self::SFTP_EXTRA_ARGS_FLAG.to_string());
-            cmd.push(self.sftp_extra_args.clone());
+            cmd.push(self.sftp_extra_args.to_string().clone());
         }
 
         if !self.ssh_common_args.is_empty() {
             cmd.push(Self::SSH_COMMON_ARGS_FLAG.to_string());
-            cmd.push(self.ssh_common_args.clone());
+            cmd.push(self.ssh_common_args.to_string().clone());
         }
 
         if !self.ssh_extra_args.is_empty() {
             cmd.push(Self::SSH_EXTRA_ARGS_FLAG.to_string());
-            cmd.push(self.ssh_extra_args.clone());
+            cmd.push(self.ssh_extra_args.to_string().clone());
         }
 
         if self.timeout > 0 {
@@ -103,7 +103,7 @@ impl AnsibleConnectionOptions {
 
         if !self.user.is_empty() {
             cmd.push(Self::USER_FLAG.to_string());
-            cmd.push(self.user.clone());
+            cmd.push(self.user.to_string().clone());
         }
 
         return Ok(cmd);
@@ -136,14 +136,15 @@ impl AnsibleConnectionOptions {
     machinectl Systemd's machinectl privilege escalation
     dzdo       Centrify's Direct Authorize
 */
-pub struct AnsiblePrivilegeEscalationOptions {
+#[derive(Default)]
+pub struct AnsiblePrivilegeEscalationOptions<'a> {
     pub ask_become_pass: bool,
     pub do_become: bool,
-    pub become_method: String,
-    pub become_user: String,
+    pub become_method: &'a str,
+    pub become_user: &'a str,
 }
 
-impl AnsiblePrivilegeEscalationOptions {
+impl AnsiblePrivilegeEscalationOptions<'_> {
     const ASK_BECOME_PASS_FLAG: &str = "--ask-become-pass";
     const BECOME_FLAG: &str = "--become";
     const BECOME_METHOD_FLAG: &str = "--become-method";
@@ -164,12 +165,12 @@ impl AnsiblePrivilegeEscalationOptions {
 
         if !self.become_method.is_empty() {
             cmd.push(Self::BECOME_METHOD_FLAG.to_string());
-            cmd.push(self.become_method.clone());
+            cmd.push(self.become_method.to_string().clone());
         }
 
         if !self.become_user.is_empty() {
             cmd.push(Self::BECOME_USER_FLAG.to_string());
-            cmd.push(self.become_user.clone());
+            cmd.push(self.become_user.to_string().clone());
         }
 
         return Ok(cmd);

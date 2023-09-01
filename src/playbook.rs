@@ -1,9 +1,9 @@
-use std::error::Error;
-use std::process::{Child};
-use std::cell::Cell;
-use serde_json::json;
-use crate::executor::{CallbackType, DefaultExecutor, verify_binary};
+use crate::executor::{verify_binary, CallbackType, DefaultExecutor};
 use crate::options::{AnsibleConnectionOptions, AnsiblePrivilegeEscalationOptions};
+use serde_json::json;
+use std::cell::Cell;
+use std::error::Error;
+use std::process::Child;
 
 /// Parameters described on `Options` section within
 /// ansible-playbook's man page, and which defines which should be

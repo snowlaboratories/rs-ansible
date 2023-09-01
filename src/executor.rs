@@ -1,18 +1,11 @@
-use std::io::{Error};
-use std::process::{Command, Child};
+use std::io::Error;
+use std::process::{Child, Command};
 use which::which;
 
-
 pub fn verify_binary(binary: &str, error_context: &str) {
-    which(binary).expect(
-        format!(
-            "{} Binary file '{}' does not exists",
-            error_context, binary
-        )
-        .as_str(),
-    );
+    which(binary)
+        .expect(format!("{} Binary file '{}' does not exists", error_context, binary).as_str());
 }
-
 
 pub type CallbackType = fn(String) -> String;
 fn default_callback(line: String) -> String {
@@ -36,9 +29,7 @@ impl DefaultExecutor {
     pub fn run(&self, command: Vec<String>) -> Result<Child, Error> {
         verify_binary(&command[0].as_str(), "(executor::run)");
 
-        let child = Command::new(command[0].clone())
-            .args(&command[1..])
-            .spawn();
+        let child = Command::new(command[0].clone()).args(&command[1..]).spawn();
 
         return child;
     }

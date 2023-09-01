@@ -1,8 +1,8 @@
 #[cfg(test)]
 mod tests {
-    use std::fs;
     use crate::test_utils::*;
     use rs_ansible::executor::*;
+    use std::fs;
 
     #[test]
     #[should_panic]
@@ -39,7 +39,7 @@ mod tests {
                     Ok(_) => fs::remove_file(file),
                     Err(err) => panic!("{}", err),
                 };
-            },
+            }
             Err(err) => panic!("{}", err),
         }
     }

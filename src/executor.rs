@@ -7,23 +7,7 @@ pub fn verify_binary(binary: &str, error_context: &str) {
         .expect(format!("{} Binary file '{}' does not exists", error_context, binary).as_str());
 }
 
-pub type CallbackType = fn(String) -> String;
-fn default_callback(line: String) -> String {
-    return line;
-}
-
-#[derive(Clone, Copy)]
-pub struct DefaultExecutor {
-    pub callback: CallbackType,
-}
-
-impl Default for DefaultExecutor {
-    fn default() -> Self {
-        DefaultExecutor {
-            callback: default_callback,
-        }
-    }
-}
+pub struct DefaultExecutor {}
 
 impl DefaultExecutor {
     pub fn run(&self, command: Vec<String>) -> Result<Child, Error> {

@@ -1,7 +1,6 @@
-use crate::executor::{verify_binary, CallbackType, DefaultExecutor};
+use crate::executor::{verify_binary, DefaultExecutor};
 use crate::options::{AnsibleConnectionOptions, AnsiblePrivilegeEscalationOptions};
 use serde_json::json;
-use std::cell::Cell;
 use std::error::Error;
 use std::process::Child;
 
@@ -238,12 +237,11 @@ impl AnsiblePlaybookOptions<'_> {
 /// Ansible-playbook command representation and how to execute it
 pub struct AnsiblePlaybookCmd<'a> {
     pub binary: &'a str,                                  // Ansible binary
-    pub executor: Box<Cell<DefaultExecutor>>,             // Ansible binary
+    pub executor: DefaultExecutor,                        // Ansible binary
     pub playbooks: Vec<&'a str>,                          // playbooks list to be run
     pub options: AnsiblePlaybookOptions<'a>,              // playbook options
     pub connection_options: AnsibleConnectionOptions<'a>, // specific options for connection
     pub privilege_escalation_options: AnsiblePrivilegeEscalationOptions<'a>, // playbook's privilege escalation options
-    pub stdout_callback: Option<Box<CallbackType>>, // Specify callback method on stdout
 }
 
 const DEFAULT_ANSIBLE_PLAYBOOK_BINARY: &str = "ansible-playbook";
@@ -251,9 +249,7 @@ impl Default for AnsiblePlaybookCmd<'_> {
     fn default() -> Self {
         AnsiblePlaybookCmd {
             binary: DEFAULT_ANSIBLE_PLAYBOOK_BINARY,
-            executor: Box::new(Cell::new(DefaultExecutor {
-                ..Default::default()
-            })),
+            executor: DefaultExecutor {},
             playbooks: vec![],
             options: AnsiblePlaybookOptions {
                 ..Default::default()
@@ -264,7 +260,6 @@ impl Default for AnsiblePlaybookCmd<'_> {
             privilege_escalation_options: AnsiblePrivilegeEscalationOptions {
                 ..Default::default()
             },
-            stdout_callback: None,
         }
     }
 }
@@ -274,17 +269,10 @@ impl AnsiblePlaybookCmd<'_> {
     pub fn run(&self) -> Result<Child, Box<dyn Error + '_>> {
         verify_binary(self.binary, "(playbook::run)");
 
-        if let Some(callback) = &self.stdout_callback {
-            self.executor.set(DefaultExecutor {
-                callback: **callback,
-            });
-        }
-
         match self.command() {
             Ok(command) => {
                 return Ok(self
                     .executor
-                    .get()
                     .run(command)
                     .expect("(executor::run) Run playbook"))
             }

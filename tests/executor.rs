@@ -8,9 +8,7 @@ mod tests {
     #[should_panic]
     #[allow(unused_must_use)]
     fn should_fail_() {
-        let executor = DefaultExecutor {
-            ..Default::default()
-        };
+        let executor = DefaultExecutor {};
         let command = vec!["non-existing-binary", "-i", "127.0.0.1,"]
             .iter()
             .map(|s| s.to_string())
@@ -22,9 +20,7 @@ mod tests {
     #[test]
     #[allow(unused_must_use)]
     fn run_command() {
-        let executor = DefaultExecutor {
-            ..Default::default()
-        };
+        let executor = DefaultExecutor {};
 
         let file = random_file();
         let command = vec!["touch", file.as_str()]

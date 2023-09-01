@@ -22,5 +22,5 @@ fn main() {
     match playbook.run() {
         Ok(_) => println!("Yay"),
         _ => panic!("Something went wrong"),
-    }
+    };
 }

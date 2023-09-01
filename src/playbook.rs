@@ -1,9 +1,8 @@
+use crate::executor::{verify_binary, DefaultExecutor};
+use crate::options::{AnsibleConnectionOptions, AnsiblePrivilegeEscalationOptions};
 use serde_json::json;
 use std::error::Error;
-use which::which;
-
-use crate::executor::DefaultExecutor;
-use crate::options::{AnsibleConnectionOptions, AnsiblePrivilegeEscalationOptions};
+use std::process::Child;
 
 /// Parameters described on `Options` section within
 /// ansible-playbook's man page, and which defines which should be
@@ -243,7 +242,6 @@ pub struct AnsiblePlaybookCmd<'a> {
     pub options: AnsiblePlaybookOptions<'a>,              // playbook options
     pub connection_options: AnsibleConnectionOptions<'a>, // specific options for connection
     pub privilege_escalation_options: AnsiblePrivilegeEscalationOptions<'a>, // playbook's privilege escalation options
-    pub stdout_callback: &'a str, // Specify callback method on stdout. Default is 'default'. Supported are: debug, default, dense, json, minimal, null, oneline, stderr, timer, yaml
 }
 
 const DEFAULT_ANSIBLE_PLAYBOOK_BINARY: &str = "ansible-playbook";
@@ -262,20 +260,22 @@ impl Default for AnsiblePlaybookCmd<'_> {
             privilege_escalation_options: AnsiblePrivilegeEscalationOptions {
                 ..Default::default()
             },
-            stdout_callback: "default",
         }
     }
 }
 
 impl AnsiblePlaybookCmd<'_> {
     /// run playbooks
-    pub fn run(&self) -> Result<bool, Box<dyn Error>> {
-        which(self.binary).expect("(playbook::run) Binary file '{}' does not exists");
-
-        // set stdout callback
+    pub fn run(&self) -> Result<Child, Box<dyn Error + '_>> {
+        verify_binary(self.binary, "(playbook::run)");
 
         match self.command() {
-            Ok(command) => return Ok(self.executor.run(command)),
+            Ok(command) => {
+                return Ok(self
+                    .executor
+                    .run(command)
+                    .expect("(executor::run) Run playbook"))
+            }
             Err(err) => Err(err),
         }
     }
@@ -286,18 +286,23 @@ impl AnsiblePlaybookCmd<'_> {
 
         cmd.push(self.binary.to_string().clone());
 
-        cmd.append(&mut self.options.gen_opts().expect("Generate command options"));
+        cmd.append(
+            &mut self
+                .options
+                .gen_opts()
+                .expect("(playbook::command) Generate command options"),
+        );
         cmd.append(
             &mut self
                 .connection_options
                 .gen_conn_opts()
-                .expect("Generate connection options"),
+                .expect("(playbook::command) Generate connection options"),
         );
         cmd.append(
             &mut self
                 .privilege_escalation_options
                 .gen_cmd_privesc_opts()
-                .expect("Generate privilige escalation options"),
+                .expect("(playbook::command) Generate privilige escalation options"),
         );
         cmd.append(&mut self.playbooks.iter().map(|&s| s.into()).collect());
 
@@ -305,6 +310,9 @@ impl AnsiblePlaybookCmd<'_> {
     }
 
     pub fn to_string(&self) -> Result<String, Box<dyn Error>> {
-        return Ok(self.command().expect("generate options").join(" "));
+        return Ok(self
+            .command()
+            .expect("(playbook::to_string) generate options")
+            .join(" "));
     }
 }

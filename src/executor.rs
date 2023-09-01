@@ -1,25 +1,45 @@
-use std::process::{Command, Stdio};
-use std::io::{BufRead, BufReader, Error, ErrorKind};
+use std::io::{Error};
+use std::process::{Command, Child};
+use which::which;
 
-pub struct DefaultExecutor {}
+
+pub fn verify_binary(binary: &str, error_context: &str) {
+    which(binary).expect(
+        format!(
+            "{} Binary file '{}' does not exists",
+            error_context, binary
+        )
+        .as_str(),
+    );
+}
+
+
+pub type CallbackType = fn(String) -> String;
+fn default_callback(line: String) -> String {
+    return line;
+}
+
+#[derive(Clone, Copy)]
+pub struct DefaultExecutor {
+    pub callback: CallbackType,
+}
+
+impl Default for DefaultExecutor {
+    fn default() -> Self {
+        DefaultExecutor {
+            callback: default_callback,
+        }
+    }
+}
+
 impl DefaultExecutor {
-    pub fn run(&self, _command: Vec<String>) -> Result<(), Error> {
+    pub fn run(&self, command: Vec<String>) -> Result<Child, Error> {
+        verify_binary(&command[0].as_str(), "(executor::run)");
 
-    fn main() -> Result<(), Error> {
-        let stdout = Command::new("journalctl")
-            .stdout(Stdio::piped())
-            .spawn()?
-            .stdout
-            .ok_or_else(|| Error::new(ErrorKind::Other,"Could not capture standard output."))?;
+        let child = Command::new(command[0].clone())
+            .args(&command[1..])
+            .spawn();
 
-        let reader = BufReader::new(stdout);
-
-        reader
-            .lines()
-            .filter_map(|line| line.ok())
-            .filter(|line| line.find("usb").is_some())
-            .for_each(|line| println!("{}", line));
-
-         Ok(())
+        return child;
     }
 }

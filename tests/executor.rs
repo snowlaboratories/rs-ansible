@@ -5,16 +5,18 @@ mod tests {
     use std::fs;
 
     #[test]
-    #[should_panic]
     #[allow(unused_must_use)]
-    fn should_fail_() {
+    fn should_fail_if_command_doesnt_exists() {
         let executor = DefaultExecutor {};
         let command = vec!["non-existing-binary", "-i", "127.0.0.1,"]
             .iter()
             .map(|s| s.to_string())
             .collect();
 
-        executor.run(command);
+        match executor.run(command) {
+            Err(_) => {}
+            _ => panic!("Should return Err"),
+        }
     }
 
     #[test]

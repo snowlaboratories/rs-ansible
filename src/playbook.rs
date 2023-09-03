@@ -267,7 +267,9 @@ impl Default for AnsiblePlaybookCmd<'_> {
 impl AnsiblePlaybookCmd<'_> {
     /// run playbooks
     pub fn run(&self) -> Result<Child, Box<dyn Error + '_>> {
-        verify_binary(self.binary, "(playbook::run)");
+        if let Err(err) = verify_binary(self.binary) {
+            return Err(format!("(playbook::run) {}", err).into());
+        }
 
         match self.command() {
             Ok(command) => {

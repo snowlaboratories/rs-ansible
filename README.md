@@ -1,5 +1,6 @@
 # rs-ansible
-Rust Library for Ansible Integration
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Test](https://github.com/snowlaboratories/rs-ansible/actions/workflows/ci.yml/badge.svg)
+![rs-ansible-logo](docs/assets/logo.png "rs-ansible logo" )
 
 ## Overview
 

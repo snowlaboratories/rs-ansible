@@ -12,7 +12,6 @@ fn main() {
     };
 
     let playbook = AnsiblePlaybookCmd {
-        binary: "",
         playbooks: vec!["site.yml", "site2.yml"],
         options: playbook_opts,
         connection_options: conn_opts,

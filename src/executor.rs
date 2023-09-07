@@ -1,5 +1,5 @@
 use std::error::Error;
-use std::process::{Child, Command};
+use std::process::{Child, Command, Stdio};
 use which::which;
 
 pub fn verify_binary(binary: &str) -> Result<(), Box<dyn Error>> {
@@ -20,6 +20,8 @@ impl DefaultExecutor {
 
         let child = Command::new(command[0].clone())
             .args(&command[1..])
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
             .spawn()
             .expect("(executor::run) run command");
 

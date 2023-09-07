@@ -19,7 +19,8 @@ fn main() {
     };
 
     match playbook.run() {
-        Ok(_) => println!("Yay"),
-        _ => panic!("Something went wrong"),
+        // Ok(child: std::process::Child) => ... to control the process
+        Ok(_) => println!("Playbook Started"),
+        Err(err) => panic!("Something went wrong: {}", err),
     };
 }

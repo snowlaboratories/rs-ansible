@@ -6,14 +6,14 @@ mod tests {
     fn generate_connection_options() {
         let options = AnsibleConnectionOptions {
             ask_pass: true,
-            connection: "local",
-            private_key: "pk",
-            scp_extra_args: "scp-extra-args",
-            sftp_extra_args: "sftp-extra-args",
-            ssh_common_args: "ssh-common-args",
-            ssh_extra_args: "ssh-extra-args",
+            connection: "local".into(),
+            private_key: "pk".into(),
+            scp_extra_args: "scp-extra-args".into(),
+            sftp_extra_args: "sftp-extra-args".into(),
+            ssh_common_args: "ssh-common-args".into(),
+            ssh_extra_args: "ssh-extra-args".into(),
             timeout: 10,
-            user: "user",
+            user: "user".into(),
         };
 
         let expected = vec![
@@ -46,14 +46,14 @@ mod tests {
     fn generate_connection_string() {
         let options = AnsibleConnectionOptions {
             ask_pass: true,
-            connection: "local",
-            private_key: "pk",
-            scp_extra_args: "scp-extra-args",
-            sftp_extra_args: "sftp-extra-args",
-            ssh_common_args: "ssh-common-args",
-            ssh_extra_args: "ssh-extra-args",
+            connection: "local".into(),
+            private_key: "pk".into(),
+            scp_extra_args: "scp-extra-args".into(),
+            sftp_extra_args: "sftp-extra-args".into(),
+            ssh_common_args: "ssh-common-args".into(),
+            ssh_extra_args: "ssh-extra-args".into(),
             timeout: 10,
-            user: "user",
+            user: "user".into(),
         };
 
         let expected = " --ask-pass --connection local --private-key pk --scp-extra-args scp-extra-args --sftp-extra-args sftp-extra-args --ssh-common-args ssh-common-args --ssh-extra-args ssh-extra-args --timeout 10 --user user";
@@ -65,8 +65,8 @@ mod tests {
     fn generate_privesc_options() {
         let options = AnsiblePrivilegeEscalationOptions {
             do_become: true,
-            become_method: "become-method",
-            become_user: "become-user",
+            become_method: "become-method".into(),
+            become_user: "become-user".into(),
             ask_become_pass: true,
         };
 
@@ -89,8 +89,8 @@ mod tests {
     fn generate_privesc_string() {
         let options = AnsiblePrivilegeEscalationOptions {
             do_become: true,
-            become_method: "become-method",
-            become_user: "become-user",
+            become_method: "become-method".into(),
+            become_user: "become-user".into(),
             ask_become_pass: true,
         };
 

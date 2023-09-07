@@ -3,16 +3,16 @@ use rs_ansible::playbook::*;
 
 fn main() {
     let conn_opts = AnsibleConnectionOptions {
-        connection: "local",
+        connection: "local".into(),
         ..Default::default()
     };
     let playbook_opts = AnsiblePlaybookOptions {
-        inventory: "127.0.0.1,",
+        inventory: "127.0.0.1,".into(),
         ..Default::default()
     };
 
     let playbook = AnsiblePlaybookCmd {
-        playbooks: vec!["site.yml", "site2.yml"],
+        playbooks: vec!["site.yml".into(), "site2.yml".into()],
         options: playbook_opts,
         connection_options: conn_opts,
         ..Default::default()

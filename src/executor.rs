@@ -5,7 +5,7 @@ use which::which;
 pub fn verify_binary(binary: &str) -> Result<(), Box<dyn Error>> {
     match which(binary) {
         Ok(_) => Ok(()),
-        Err(err) => Err(format!("Binary file '{}' does not exists: ({})", binary, err).into())
+        Err(err) => Err(format!("Binary file '{}' does not exists: ({})", binary, err).into()),
     }
 }
 

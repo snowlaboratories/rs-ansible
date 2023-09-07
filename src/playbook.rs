@@ -12,28 +12,28 @@ pub struct AnsiblePlaybookOptions {
     pub check: bool, // don't make any changes; instead, try to predict some of the changes that may occur
     pub diff: bool, // when changing (small) files and templates, show the differences in those files; works great with --check
     pub extra_vars: serde_json::Value, // is a map of extra variables used on ansible-playbook execution
-    pub extra_vars_file: Vec<String>, // is a list of files used to load extra-vars
+    pub extra_vars_file: Vec<String>,  // is a list of files used to load extra-vars
     pub flush_cache: bool,             // is the flush cache flag for ansible-playbook
     pub force_handlers: bool,          // run handlers even if a task fails
-    pub forks: String,                // specify number of parallel processes to use (default=50)
-    pub inventory: String,            // specify inventory host path
-    pub limit: String,                // is selected hosts additional pattern
+    pub forks: String,                 // specify number of parallel processes to use (default=50)
+    pub inventory: String,             // specify inventory host path
+    pub limit: String,                 // is selected hosts additional pattern
     pub list_hosts: bool,              // outputs a list of matching hosts
     pub list_tags: bool,               // is the list tags flag for ansible-playbook
     pub list_tasks: bool,              // is the list tasks flag for ansible-playbook
     pub module_path: String, // repend colon-separated path(s) to module library (default=~/.ansible/plugins/modules:/usr/share/ansible/plugins/modules)
     pub skip_tags: String,   // only run plays and tasks whose tags do not match these values
     pub start_at_task: String, // start the playbook at the task matching this name
-    pub step: bool,           // one-step-at-a-time: confirm each task before running
-    pub syntax_check: bool,   // is the syntax check flag for ansible-playbook
+    pub step: bool,          // one-step-at-a-time: confirm each task before running
+    pub syntax_check: bool,  // is the syntax check flag for ansible-playbook
     pub tags: String,        // is the tags flag for ansible-playbook
     pub vault_id: String,    // the vault identity to use
     pub vault_password_file: String, // path to the file holding vault decryption key
-    pub verbose: bool,        // verbose mode enabled
-    pub verbose_v: bool,      // verbose mode -v enabled
-    pub verbose_vv: bool,     // verbose mode -vv enabled
-    pub verbose_vvv: bool,    // verbose mode -vvv enabled
-    pub verbose_vvvv: bool,   // verbose mode -vvvv enabled
+    pub verbose: bool,       // verbose mode enabled
+    pub verbose_v: bool,     // verbose mode -v enabled
+    pub verbose_vv: bool,    // verbose mode -vv enabled
+    pub verbose_vvv: bool,   // verbose mode -vvv enabled
+    pub verbose_vvvv: bool,  // verbose mode -vvvv enabled
     pub version: bool, // show program's version number, config file location, configured module search path, module location, executable location and exit
 }
 
@@ -48,7 +48,7 @@ impl Default for AnsiblePlaybookOptions {
             flush_cache: false,
             force_handlers: false,
             forks: String::new(),
-            inventory:  String::new(), 
+            inventory: String::new(),
             limit: String::new(),
             list_hosts: false,
             list_tags: false,
@@ -236,9 +236,9 @@ impl AnsiblePlaybookOptions {
 
 /// Ansible-playbook command representation and how to execute it
 pub struct AnsiblePlaybookCmd {
-    pub binary: String,                                  // Ansible binary
-    pub executor: DefaultExecutor,                        // Ansible binary
-    pub playbooks: Vec<String>,                          // playbooks list to be run
+    pub binary: String,                               // Ansible binary
+    pub executor: DefaultExecutor,                    // Ansible binary
+    pub playbooks: Vec<String>,                       // playbooks list to be run
     pub options: AnsiblePlaybookOptions,              // playbook options
     pub connection_options: AnsibleConnectionOptions, // specific options for connection
     pub privilege_escalation_options: AnsiblePrivilegeEscalationOptions, // playbook's privilege escalation options

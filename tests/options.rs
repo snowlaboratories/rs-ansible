@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use rs_ansible::options::*;
+    use rs_ansible::*;
 
     #[test]
     fn generate_connection_options() {

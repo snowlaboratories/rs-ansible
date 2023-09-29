@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use crate::test_utils::*;
-    use rs_ansible::executor::*;
+    use rs_ansible::*;
     use std::fs;
 
     #[test]

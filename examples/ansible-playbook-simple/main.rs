@@ -1,5 +1,4 @@
-use rs_ansible::options::*;
-use rs_ansible::playbook::*;
+use rs_ansible::*;
 
 fn main() {
     let conn_opts = AnsibleConnectionOptions {

@@ -1,9 +1,7 @@
 #[cfg(test)]
 mod tests {
     use serde_json::json;
-
-    use rs_ansible::options::*;
-    use rs_ansible::playbook::*;
+    use rs_ansible::*;
 
     #[test]
     fn generate_connection_options() {

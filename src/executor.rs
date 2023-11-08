@@ -9,7 +9,7 @@ pub fn verify_binary(binary: &str) -> Result<(), Box<dyn Error>> {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct DefaultExecutor {}
 
 impl DefaultExecutor {

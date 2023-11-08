@@ -7,6 +7,7 @@ use std::process::Child;
 /// Parameters described on `Options` section within
 /// ansible-playbook's man page, and which defines which should be
 /// the ansible-playbook execution behavior.
+#[derive(Clone)]
 pub struct AnsiblePlaybookOptions {
     pub ask_vault_password: bool,      // ask for vault password
     pub check: bool, // don't make any changes; instead, try to predict some of the changes that may occur
@@ -235,6 +236,7 @@ impl AnsiblePlaybookOptions {
 }
 
 /// Ansible-playbook command representation and how to execute it
+#[derive(Clone)]
 pub struct AnsiblePlaybookCmd {
     pub binary: String,                               // Ansible binary
     pub executor: DefaultExecutor,                    // Ansible binary

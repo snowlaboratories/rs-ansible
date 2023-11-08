@@ -1,14 +1,12 @@
 #[cfg(test)]
 mod tests {
+    use rs_ansible::*;
     use serde_json::json;
-
-    use rs_ansible::options::*;
-    use rs_ansible::playbook::*;
 
     #[test]
     fn generate_connection_options() {
         let options = AnsibleConnectionOptions {
-            connection: "local",
+            connection: "local".into(),
             ..Default::default()
         };
         let expected = vec!["--connection", "local"];
@@ -22,7 +20,7 @@ mod tests {
     #[test]
     fn generate_playbook_options() {
         struct PlaybookOptsTest<'a> {
-            options: AnsiblePlaybookOptions<'a>,
+            options: AnsiblePlaybookOptions,
             expected: Vec<&'a str>,
             desc: &'a str,
         }
@@ -42,10 +40,10 @@ mod tests {
                     force_handlers: true,
                     list_tags: true,
                     list_tasks: true,
-                    skip_tags: "tagN",
-                    start_at_task: "second",
+                    skip_tags: "tagN".into(),
+                    start_at_task: "second".into(),
                     step: true,
-                    tags: "tags",
+                    tags: "tags".into(),
                     ..Default::default()
                 },
                 expected: vec![
@@ -68,14 +66,14 @@ mod tests {
                     extra_vars: json!({
                         "extra": "var",
                     }),
-                    extra_vars_file: vec!["@test.yml"],
+                    extra_vars_file: vec!["@test.yml".into()],
                     flush_cache: true,
-                    inventory: "inventory",
-                    limit: "limit",
+                    inventory: "inventory".into(),
+                    limit: "limit".into(),
                     list_hosts: true,
                     list_tags: true,
                     list_tasks: true,
-                    tags: "tags",
+                    tags: "tags".into(),
                     ..Default::default()
                 },
                 expected: vec![
@@ -113,41 +111,41 @@ mod tests {
     #[test]
     fn generate_command() {
         let playbook_cmd = AnsiblePlaybookCmd {
-            playbooks: vec!["test/ansible/site.yml"],
+            playbooks: vec!["test/ansible/site.yml".into()],
             connection_options: AnsibleConnectionOptions {
                 ask_pass: true,
-                connection: "local",
-                private_key: "pk",
+                connection: "local".into(),
+                private_key: "pk".into(),
                 timeout: 10,
-                user: "apenella",
+                user: "apenella".into(),
                 ..Default::default()
             },
             options: AnsiblePlaybookOptions {
                 ask_vault_password: true,
                 check: true,
                 diff: true,
-                forks: "10",
+                forks: "10".into(),
                 list_hosts: true,
-                module_path: "/dev/null",
+                module_path: "/dev/null".into(),
                 syntax_check: true,
-                vault_id: "asdf",
-                vault_password_file: "/dev/null",
+                vault_id: "asdf".into(),
+                vault_password_file: "/dev/null".into(),
                 verbose: true,
                 version: true,
 
-                inventory: "test/ansible/inventory/all",
-                limit: "myhost",
+                inventory: "test/ansible/inventory/all".into(),
+                limit: "myhost".into(),
                 extra_vars: json!({
                     "var1": "value1",
                 }),
                 flush_cache: true,
-                tags: "tag1",
+                tags: "tag1".into(),
                 ..Default::default()
             },
             privilege_escalation_options: AnsiblePrivilegeEscalationOptions {
                 do_become: true,
-                become_method: "sudo",
-                become_user: "apenella",
+                become_method: "sudo".into(),
+                become_user: "apenella".into(),
                 ask_become_pass: true,
                 ..Default::default()
             },

@@ -18,6 +18,7 @@ pub fn ansible_set_env(key: &str, value: &str) {
 
 /// Has those parameters described on `Connections Options` section within
 /// ansible-playbook's man page, and which defines how to connect to hosts.
+#[derive(Debug, Clone)]
 pub struct AnsibleConnectionOptions {
     pub ask_pass: bool,
     pub connection: String,
@@ -136,7 +137,7 @@ impl AnsibleConnectionOptions {
     machinectl Systemd's machinectl privilege escalation
     dzdo       Centrify's Direct Authorize
 */
-#[derive(Default)]
+#[derive(Debug, Default, Clone)]
 pub struct AnsiblePrivilegeEscalationOptions {
     pub ask_become_pass: bool,
     pub do_become: bool,
